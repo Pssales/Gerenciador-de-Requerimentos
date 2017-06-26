@@ -51,6 +51,7 @@ public class AlunoDao {
             stmt.setString(6, a.getEmail());
             
             stmt.executeUpdate();
+                        
 
             JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
         } catch (SQLException ex) {

@@ -4,6 +4,15 @@ public class Aluno extends Pessoa {
 
     private String ra;
     private int idAluno;
+    private String materia;
+
+    public String getRa() {
+        return ra;
+    }
+
+    public void setRa(String ra) {
+        this.ra = ra;
+    }
 
     public int getIdAluno() {
         return idAluno;
@@ -13,12 +22,12 @@ public class Aluno extends Pessoa {
         this.idAluno = idAluno;
     }
 
-    public String getRa() {
-        return ra;
+    public String getMateria() {
+        return materia;
     }
 
-    public void setRa(String ra) {
-        this.ra = ra;
+    public void setMateria(String materia) {
+        this.materia = materia;
     }
 
     public String getNome() {
@@ -42,7 +51,6 @@ public class Aluno extends Pessoa {
     }
 
     public void setDataNascimento(String dataNascimento) {
-
         this.dataNascimento = dataNascimento;
     }
 
@@ -69,5 +77,8 @@ public class Aluno extends Pessoa {
     public void setEmail(String email) {
         this.email = email;
     }
+    
+    
+  
 
 }
