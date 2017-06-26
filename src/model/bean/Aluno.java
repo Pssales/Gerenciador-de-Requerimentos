@@ -2,8 +2,8 @@ package model.bean;
 
 public class Aluno extends Pessoa {
 
-    protected String ra;
-    protected int idAluno;
+    private String ra;
+    private int idAluno;
 
     public int getIdAluno() {
         return idAluno;
