@@ -114,7 +114,7 @@ public class Login extends javax.swing.JFrame {
 
     private void EntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntrarActionPerformed
         if (logUsuario.getText().equals("admin") && txtSenha.getText().equals("1234")) {
-            TelaAluno m = new TelaAluno();
+            Menu m = new Menu();
             m.setVisible(true);
             dispose();
         } else {

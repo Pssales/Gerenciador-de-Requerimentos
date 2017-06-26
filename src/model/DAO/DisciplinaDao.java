@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import static model.DAO.AlunoDao.formataData;
-import model.bean.Aluno;
 import model.bean.Disciplina;
 
 /**
@@ -90,6 +88,7 @@ public class DisciplinaDao {
 
             stmt.setString(1, dis.getNomeDisciplina());
             stmt.setString(2, dis.getDescricao());
+            stmt.setInt(3, dis.getIdDisciplina());
             
             stmt.executeUpdate();
 
@@ -107,13 +106,13 @@ public class DisciplinaDao {
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("DELETE FROM disciplina  WHERE idAluno=?");
+            stmt = con.prepareStatement("DELETE FROM disciplina  WHERE idDisciplina=?");
            
             stmt.setInt(1, dis.getIdDisciplina());
             
             stmt.executeUpdate();
             
-            stmt = con.prepareStatement("DELETE FROM Aluno WHERE idAluno =?");
+            stmt = con.prepareStatement("DELETE FROM Aluno WHERE idDisciplina=?");
             
             JOptionPane.showMessageDialog(null, "Excluido com sucesso!");
         } catch (SQLException ex) {
