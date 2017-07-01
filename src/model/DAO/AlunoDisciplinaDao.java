@@ -10,52 +10,43 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import model.bean.Aluno;
+import model.bean.Disciplina;
 
 /**
  *
- * @author Camila
+ * @author a1600222
  */
-public class AlunoDao {
-
+public class AlunoDisciplinaDao {
     Connection con;
 
-    public AlunoDao() {
+    public AlunoDisciplinaDao() {
         con = ConnectionFactory.getConnection();
     }
-
-    public void create(Aluno a) {
+    
+    public void create(Aluno a, Disciplina d) {
 
         PreparedStatement stmt = null;
-
+        ResultSet rs = null;
         try {
-            stmt = con.prepareStatement("INSERT INTO Aluno (nomeAluno, dataNascimento, telefone, rg,ra, email)VALUES(?,?,?,?,?,?)");
-
-            stmt.setString(1, a.getNome());
-            try {
-                stmt.setDate(2, formataData(a.getDataNascimento()));
-            } catch (Exception ex) {
-                Logger.getLogger(AlunoDao.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            stmt.setString(3, a.getTelefone());
-            stmt.setString(4, a.getRg());
-            stmt.setString(5, a.getRa());
-            stmt.setString(6, a.getEmail());
+            stmt = con.prepareStatement("SELECT * FROM aluno WHERE nomeAluno = ?");
+            rs = stmt.executeQuery();
+            
+            stmt = con.prepareStatement("INSERT INTO aluno_disciplina (idAluno, idDisciplina)VALUES(?,?)");
+            stmt.setInt(1, rs.getInt("idAluno"));
+            stmt.setInt(2, d.getIdDisciplina());
             
             stmt.executeUpdate();
                         
 
             JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
         } catch (SQLException ex) {
-            System.out.println(ex + "merda");
+            System.out.println(ex + "erro");
         } finally {
             ConnectionFactory.closeConnection(con, stmt);
         }
@@ -96,62 +87,17 @@ public class AlunoDao {
         return alunos;
 
     }
-    public List<Aluno> readName(String name) {
-
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
-        List<Aluno> alunos = new ArrayList<>();
-
-        try {
-            stmt = con.prepareStatement("SELECT * FROM aluno WHERE nomeAluno LIKE ?");
-            stmt.setString(1, "%"+name+"%");
-            rs = stmt.executeQuery();
-
-            while (rs.next()) {
-
-                Aluno aluno = new Aluno();
-
-                aluno.setIdAluno(rs.getInt("idAluno"));
-                aluno.setNome(rs.getString("nomeAluno"));
-                aluno.setDataNascimento(rs.getString("dataNascimento"));
-                aluno.setTelefone(rs.getString("telefone"));
-                aluno.setRg(rs.getString("rg"));
-                aluno.setRa(rs.getString("ra"));
-                aluno.setEmail(rs.getString("Email"));
-                alunos.add(aluno);
-            }
-
-        } catch (SQLException ex) {
-
-            Logger.getLogger(AlunoDao.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            ConnectionFactory.closeConnection(con, stmt, rs);
-        }
-
-        return alunos;
-
-    }
 
     public void update(Aluno a) {
 
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("UPDATE aluno SET nomeAluno = ?, dataNascimento = ?, telefone =?, rg = ?,ra =?, email = ? WHERE idAluno = ?");
-
-            stmt.setString(1, a.getNome());
-            try {
-                stmt.setDate(2, formataData(a.getDataNascimento()));
-            } catch (Exception ex) {
-                Logger.getLogger(AlunoDao.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            stmt.setString(3, a.getTelefone());
-            stmt.setString(4, a.getRg());
-            stmt.setString(5, a.getRa());
-            stmt.setString(6, a.getEmail());
-            stmt.setInt(7, a.getIdAluno());
-
+            stmt = con.prepareStatement("UPDATE aluno_disciplina SET idAluno = ?, idDisciplina = ? WHERE idAluno = ?");
+            
+            stmt.setInt(1, a.getIdAluno());
+            stmt.setInt(2, a.getDisciplina().getIdDisciplina());
+          
             stmt.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
@@ -168,7 +114,7 @@ public class AlunoDao {
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("DELETE FROM aluno  WHERE idAluno=?");
+            stmt = con.prepareStatement("DELETE FROM aluno_disciplina  WHERE idAluno=?");
            
             stmt.setInt(1, a.getIdAluno());
             
@@ -187,20 +133,5 @@ public class AlunoDao {
         } finally {
             ConnectionFactory.closeConnection(con, stmt);
         }
-    }
-    
-
-    public static java.sql.Date formataData(String data) throws Exception {
-        if (data == null || data.equals("")) {
-            return null;
-        }
-        java.sql.Date date = null;
-        try {
-            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            date = new java.sql.Date(((java.util.Date) formatter.parse(data)).getTime());
-        } catch (ParseException e) {
-            throw e;
-        }
-        return date;
     }
 }

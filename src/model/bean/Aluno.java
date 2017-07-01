@@ -4,7 +4,7 @@ public class Aluno extends Pessoa {
 
     private String ra;
     private int idAluno;
-    private String materia;
+    private Disciplina disciplina;
 
     public String getRa() {
         return ra;
@@ -22,13 +22,15 @@ public class Aluno extends Pessoa {
         this.idAluno = idAluno;
     }
 
-    public String getMateria() {
-        return materia;
+    public Disciplina getDisciplina() {
+        return disciplina;
     }
 
-    public void setMateria(String materia) {
-        this.materia = materia;
+    public void setDisciplina(Disciplina disciplina) {
+        this.disciplina = disciplina;
     }
+
+    
 
     public String getNome() {
         return nome;

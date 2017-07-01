@@ -47,9 +47,26 @@ public class TelaAluno extends javax.swing.JFrame {
                 a.getRa(),
                 a.getEmail()
             });
-
         }
+    }
+    public void readJTableName(String name) {
 
+        DefaultTableModel modelo = (DefaultTableModel) jTAlunos.getModel();
+        modelo.setNumRows(0);
+        AlunoDao pdao = new AlunoDao();
+
+        for (Aluno a : pdao.readName(name)) {
+
+            modelo.addRow(new Object[]{
+                a.getIdAluno(),
+                a.getNome(),
+                a.getDataNascimento(),
+                a.getTelefone(),
+                a.getRg(),
+                a.getRa(),
+                a.getEmail()
+            });
+        }
     }
 
     /**
@@ -71,7 +88,7 @@ public class TelaAluno extends javax.swing.JFrame {
         jButtonCadastrar = new javax.swing.JButton();
         jButtonExcluir = new javax.swing.JButton();
         jButtonAtualizar = new javax.swing.JButton();
-        txtBuscaDesc = new javax.swing.JTextField();
+        txtBusca = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         txtRg = new javax.swing.JTextField();
@@ -200,7 +217,7 @@ public class TelaAluno extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jButtonAtualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtBuscaDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton4)))
                 .addGap(65, 65, 65))
@@ -234,7 +251,7 @@ public class TelaAluno extends javax.swing.JFrame {
                     .addComponent(jButtonExcluir)
                     .addComponent(jButtonAtualizar)
                     .addComponent(jButton4)
-                    .addComponent(txtBuscaDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtBusca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(24, 24, 24))
         );
 
@@ -409,7 +426,7 @@ public class TelaAluno extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-
+        readJTableName(txtBusca.getText());
 
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -492,7 +509,7 @@ public class TelaAluno extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTAlunos;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField txtBuscaDesc;
+    private javax.swing.JTextField txtBusca;
     private javax.swing.JTextField txtDataNasc;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtNome;
