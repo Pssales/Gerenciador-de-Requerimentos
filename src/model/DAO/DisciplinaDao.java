@@ -31,10 +31,11 @@ public class DisciplinaDao {
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("INSERT INTO disciplina (nomeDisciplina, descricao)VALUES(?,?)");
+            stmt = con.prepareStatement("INSERT INTO disciplina (nomeDisciplina, descricao,idProfessor)VALUES(?,?,?)");
 
             stmt.setString(1, dis.getNomeDisciplina());
             stmt.setString(2, dis.getDescricao());
+            stmt.setInt(3, dis.getProfessor().getIdProfessor());
            
             //executa o comando
             stmt.executeUpdate();
@@ -55,7 +56,7 @@ public class DisciplinaDao {
         List<Disciplina> disciplinas = new ArrayList<>();
 
         try {
-            stmt = con.prepareStatement("SELECT * FROM disciplina");
+            stmt = con.prepareStatement("SELECT idDisciplina,nomeDisciplina,descricao,nomeProfessor FROM disciplina NATURAL JOIN professor");
             rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -65,6 +66,7 @@ public class DisciplinaDao {
                 dis.setIdDisciplina(rs.getInt("idDisciplina"));
                 dis.setNomeDisciplina(rs.getString("nomeDisciplina"));
                 dis.setDescricao(rs.getString("descricao"));
+                dis.getProfessor().setNome(rs.getString("nomeProfessor"));
                 disciplinas.add(dis);
             }
 

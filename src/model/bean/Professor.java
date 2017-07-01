@@ -69,6 +69,9 @@ public class Professor extends Pessoa {
         this.email = email;
     }
     
-    
+    @Override
+    public String toString(){
+        return getNome();
+    }
     
 }
