@@ -80,7 +80,8 @@ public class Aluno extends Pessoa {
         this.email = email;
     }
     
-    
-  
-
+    @Override
+    public String toString(){
+        return getNome();
+    }
 }

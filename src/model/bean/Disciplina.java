@@ -39,6 +39,10 @@ public class Disciplina {
         this.descricao = descricao;
     }
     
+    @Override
+    public String toString(){
+        return getNomeDisciplina();
+    }
     
     
     

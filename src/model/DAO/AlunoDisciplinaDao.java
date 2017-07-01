@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import model.bean.Aluno;
+import model.bean.AlunoDisciplina;
 import model.bean.Disciplina;
 
 /**
@@ -23,26 +24,24 @@ import model.bean.Disciplina;
  * @author a1600222
  */
 public class AlunoDisciplinaDao {
+
     Connection con;
 
     public AlunoDisciplinaDao() {
         con = ConnectionFactory.getConnection();
     }
-    
+
     public void create(Aluno a, Disciplina d) {
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            stmt = con.prepareStatement("SELECT * FROM aluno WHERE nomeAluno = ?");
-            rs = stmt.executeQuery();
-            
+
             stmt = con.prepareStatement("INSERT INTO aluno_disciplina (idAluno, idDisciplina)VALUES(?,?)");
-            stmt.setInt(1, rs.getInt("idAluno"));
+            stmt.setInt(1, a.getIdAluno());
             stmt.setInt(2, d.getIdDisciplina());
-            
+
             stmt.executeUpdate();
-                        
 
             JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
         } catch (SQLException ex) {
@@ -52,29 +51,28 @@ public class AlunoDisciplinaDao {
         }
     }
 
-    public List<Aluno> read() {
+    public List<AlunoDisciplina> read() {
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
-        List<Aluno> alunos = new ArrayList<>();
+        List<AlunoDisciplina> alunosDisciplinas = new ArrayList<>();
 
         try {
-            stmt = con.prepareStatement("SELECT * FROM aluno");
+            stmt = con.prepareStatement("SELECT idAluno,nomeAluno,idDisciplina,nomeDisciplina FROM aluno NATURAL JOIN  aluno_disciplina NATURAL JOIN disciplina;");
             rs = stmt.executeQuery();
 
             while (rs.next()) {
 
-                Aluno aluno = new Aluno();
+                AlunoDisciplina ad = new AlunoDisciplina();
 
-                aluno.setIdAluno(rs.getInt("idAluno"));
-                aluno.setNome(rs.getString("nomeAluno"));
-                aluno.setDataNascimento(rs.getString("dataNascimento"));
-                aluno.setTelefone(rs.getString("telefone"));
-                aluno.setRg(rs.getString("rg"));
-                aluno.setRa(rs.getString("ra"));
-                aluno.setEmail(rs.getString("Email"));
-                alunos.add(aluno);
+                ad.getAluno().setIdAluno(rs.getInt("idAluno"));
+                ad.getAluno().setNome(rs.getString("nomeAluno"));
+                ad.getDisciplina().setIdDisciplina(rs.getInt("idDisciplina"));
+                ad.getDisciplina().setNomeDisciplina(rs.getString("nomeDisciplina"));
+                
+
+                alunosDisciplinas.add(ad);
             }
 
         } catch (SQLException ex) {
@@ -84,20 +82,20 @@ public class AlunoDisciplinaDao {
             ConnectionFactory.closeConnection(con, stmt, rs);
         }
 
-        return alunos;
+        return alunosDisciplinas;
 
     }
 
-    public void update(Aluno a) {
+    public void update(AlunoDisciplina ad) {
 
         PreparedStatement stmt = null;
 
         try {
             stmt = con.prepareStatement("UPDATE aluno_disciplina SET idAluno = ?, idDisciplina = ? WHERE idAluno = ?");
-            
-            stmt.setInt(1, a.getIdAluno());
-            stmt.setInt(2, a.getDisciplina().getIdDisciplina());
-          
+
+            stmt.setInt(1, ad.getAluno().getIdAluno());
+            stmt.setInt(2, ad.getDisciplina().getIdDisciplina());
+
             stmt.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
@@ -109,21 +107,15 @@ public class AlunoDisciplinaDao {
         }
     }
 
-    public void delete(Aluno a) {
+    public void delete(AlunoDisciplina ad) {
 
         PreparedStatement stmt = null;
 
         try {
             stmt = con.prepareStatement("DELETE FROM aluno_disciplina  WHERE idAluno=?");
-           
-            stmt.setInt(1, a.getIdAluno());
-            
-            stmt.executeUpdate();
-            
-            stmt = con.prepareStatement("DELETE FROM Aluno WHERE idAluno =?");
-            
-            stmt.setInt(1, a.getIdAluno());
-            
+
+            stmt.setInt(1, ad.getAluno().getIdAluno());
+
             stmt.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Excluido com sucesso!");

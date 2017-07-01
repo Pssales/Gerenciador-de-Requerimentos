@@ -8,7 +8,11 @@ package view;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import model.DAO.AlunoDao;
+import model.DAO.AlunoDisciplinaDao;
 import model.DAO.DisciplinaDao;
+import model.bean.Aluno;
+import model.bean.AlunoDisciplina;
 import model.bean.Disciplina;
 
 /**
@@ -21,28 +25,38 @@ public class TelaAlunoDisciplina extends javax.swing.JFrame {
      * Creates new form ViewJTable
      */
     public TelaAlunoDisciplina() {
-        
+
         initComponents();
+
+        AlunoDao adao = new AlunoDao();
+        DisciplinaDao ddao = new DisciplinaDao();
+
+        for (Aluno a : adao.read()) {
+            cbAlunos.addItem(a);
+        }
+        for (Disciplina d : ddao.read()) {
+            cbDisciplinas.addItem(d);
+        }
+
         DefaultTableModel modelo = (DefaultTableModel) jTAlunoDisciplina.getModel();
         jTAlunoDisciplina.setRowSorter(new TableRowSorter(modelo));
 
-        readJTable();
-
+        //   readJTable();
     }
 
     public void readJTable() {
 
         DefaultTableModel modelo = (DefaultTableModel) jTAlunoDisciplina.getModel();
         modelo.setNumRows(0);
-        DisciplinaDao dao = new DisciplinaDao();
+        AlunoDisciplinaDao dao = new AlunoDisciplinaDao();
 
-        for (Disciplina d : dao.read()) {
+        for (AlunoDisciplina ad : dao.read()) {
 
             modelo.addRow(new Object[]{
-                d.getIdDisciplina(),
-                d.getNomeDisciplina(),
-                d.getDescricao()
-                
+                ad.getAluno().getIdAluno(),
+                ad.getAluno().getNome(),
+                ad.getDisciplina().getNomeDisciplina(),
+                ad.getDisciplina().getNomeDisciplina()
             });
 
         }
@@ -59,8 +73,6 @@ public class TelaAlunoDisciplina extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        txtNomeAluno = new javax.swing.JTextField();
-        txtNomeDisciplina = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jButtonCadastrar = new javax.swing.JButton();
@@ -69,6 +81,8 @@ public class TelaAlunoDisciplina extends javax.swing.JFrame {
         txtBuscaDesc = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        cbAlunos = new javax.swing.JComboBox<>();
+        cbDisciplinas = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTAlunoDisciplina = new javax.swing.JTable();
@@ -76,9 +90,9 @@ public class TelaAlunoDisciplina extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Gerenciar Disciplina");
 
-        jLabel1.setText("Nome Aluno:");
+        jLabel1.setText("Aluno:");
 
-        jLabel2.setText("Nome Disciplina: ");
+        jLabel2.setText(" Disciplina: ");
 
         jButtonCadastrar.setText("Cadastrar");
         jButtonCadastrar.addActionListener(new java.awt.event.ActionListener() {
@@ -134,9 +148,9 @@ public class TelaAlunoDisciplina extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jButtonAtualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtNomeAluno, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(50, 50, 50)
+                                .addComponent(cbAlunos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -145,8 +159,9 @@ public class TelaAlunoDisciplina extends javax.swing.JFrame {
                                 .addComponent(jButton4))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtNomeDisciplina, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cbDisciplinas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(146, 146, 146)))))
                 .addGap(100, 100, 100))
         );
         jPanel1Layout.setVerticalGroup(
@@ -157,9 +172,9 @@ public class TelaAlunoDisciplina extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
-                    .addComponent(txtNomeAluno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNomeDisciplina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                    .addComponent(cbAlunos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbDisciplinas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCadastrar)
                     .addComponent(jButtonExcluir)
@@ -239,9 +254,9 @@ public class TelaAlunoDisciplina extends javax.swing.JFrame {
         // preenche os campos com registos do banco de dados
 
         if (jTAlunoDisciplina.getSelectedRow() != -1) {
-            
-            txtNomeAluno.setText(jTAlunoDisciplina.getValueAt(jTAlunoDisciplina.getSelectedRow(), 1).toString());
-            txtNomeDisciplina.setText(jTAlunoDisciplina.getValueAt(jTAlunoDisciplina.getSelectedRow(), 2).toString());
+
+            cbAlunos.setActionCommand(jTAlunoDisciplina.getValueAt(jTAlunoDisciplina.getSelectedRow(), 1).toString());
+            cbDisciplinas.setActionCommand(jTAlunoDisciplina.getValueAt(jTAlunoDisciplina.getSelectedRow(), 2).toString());
             
 
         }
@@ -253,8 +268,8 @@ public class TelaAlunoDisciplina extends javax.swing.JFrame {
 
         if (jTAlunoDisciplina.getSelectedRow() != -1) {
 
-            txtNomeAluno.setText(jTAlunoDisciplina.getValueAt(jTAlunoDisciplina.getSelectedRow(), 1).toString());
-            txtNomeDisciplina.setText(jTAlunoDisciplina.getValueAt(jTAlunoDisciplina.getSelectedRow(), 2).toString());
+            cbAlunos.setActionCommand(jTAlunoDisciplina.getValueAt(jTAlunoDisciplina.getSelectedRow(), 1).toString());
+            cbDisciplinas.setActionCommand(jTAlunoDisciplina.getValueAt(jTAlunoDisciplina.getSelectedRow(), 2).toString());
             
         }
 
@@ -268,51 +283,38 @@ public class TelaAlunoDisciplina extends javax.swing.JFrame {
     private void jButtonAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAtualizarActionPerformed
         // TODO add your handling code here:
         if (jTAlunoDisciplina.getSelectedRow() != -1) {
-            Disciplina d = new Disciplina();
-            DisciplinaDao dao = new DisciplinaDao();
+            AlunoDisciplina ad = new AlunoDisciplina();
+            AlunoDisciplinaDao dao = new AlunoDisciplinaDao();
+            ad.setAluno((Aluno) cbAlunos.getSelectedItem());
+            ad.setDisciplina((Disciplina) cbDisciplinas.getSelectedItem());
+        
+            dao.update(ad);
 
-            d.setNomeDisciplina(txtNomeAluno.getText());
-            d.setDescricao(txtNomeDisciplina.getText());
-            
-            d.setIdDisciplina((int) jTAlunoDisciplina.getValueAt(jTAlunoDisciplina.getSelectedRow(), 0));
-            dao.update(d);
-
-            txtNomeAluno.setText("");
-            txtNomeDisciplina.setText("");
-            
             readJTable();
         }
     }//GEN-LAST:event_jButtonAtualizarActionPerformed
 
     private void jButtonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExcluirActionPerformed
         if (jTAlunoDisciplina.getSelectedRow() != -1) {
-            Disciplina d = new Disciplina();
-            DisciplinaDao dao = new DisciplinaDao();
-            d.setIdDisciplina((int) jTAlunoDisciplina.getValueAt(jTAlunoDisciplina.getSelectedRow(), 0));
-            dao.delete(d);
+            AlunoDisciplina ad = new AlunoDisciplina();
+            AlunoDisciplinaDao dao = new AlunoDisciplinaDao();
+            ad.getAluno().setIdAluno((int) jTAlunoDisciplina.getValueAt(jTAlunoDisciplina.getSelectedRow(), 0));
+            dao.delete(ad);
 
-            txtNomeAluno.setText("");
-            txtNomeDisciplina.setText("");
-            
             readJTable();
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Erro.");
         }
     }//GEN-LAST:event_jButtonExcluirActionPerformed
 
     private void jButtonCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadastrarActionPerformed
         // TODO add your handling code here:
-        Disciplina dis = new Disciplina();
-        DisciplinaDao dao = new DisciplinaDao();
+        AlunoDisciplina ad = new AlunoDisciplina();
+        AlunoDisciplinaDao addao = new AlunoDisciplinaDao();
+        ad.setAluno((Aluno) cbAlunos.getSelectedItem());
+        ad.setDisciplina((Disciplina) cbDisciplinas.getSelectedItem());
+        addao.create(ad.getAluno(), ad.getDisciplina());
 
-        dis.setNomeDisciplina(txtNomeAluno.getText());
-        dis.setDescricao(txtNomeDisciplina.getText());
-        
-        dao.create(dis);
-
-        txtNomeAluno.setText("");
-        txtNomeDisciplina.setText("");
-        
         readJTable();
     }//GEN-LAST:event_jButtonCadastrarActionPerformed
 
@@ -485,6 +487,8 @@ public class TelaAlunoDisciplina extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<Object> cbAlunos;
+    private javax.swing.JComboBox<Object> cbDisciplinas;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButtonAtualizar;
@@ -497,7 +501,5 @@ public class TelaAlunoDisciplina extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTAlunoDisciplina;
     private javax.swing.JTextField txtBuscaDesc;
-    private javax.swing.JTextField txtNomeAluno;
-    private javax.swing.JTextField txtNomeDisciplina;
     // End of variables declaration//GEN-END:variables
 }
