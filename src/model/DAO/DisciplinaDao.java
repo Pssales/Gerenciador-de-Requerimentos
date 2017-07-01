@@ -78,6 +78,38 @@ public class DisciplinaDao {
         return disciplinas;
 
     }
+    public List<Disciplina> readName(String name) {
+
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        List<Disciplina> disciplinas = new ArrayList<>();
+
+        try {
+            stmt = con.prepareStatement("SELECT * FROM disciplina WHERE nomeDisciplina LIKE ?");
+            stmt.setString(1, "%"+name+"%");
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+
+                Disciplina dis = new Disciplina();
+
+                dis.setIdDisciplina(rs.getInt("idDisciplina"));
+                dis.setNomeDisciplina(rs.getString("nomeDisciplina"));
+                dis.setDescricao(rs.getString("descricao"));
+                disciplinas.add(dis);
+            }
+
+        } catch (SQLException ex) {
+
+            Logger.getLogger(DisciplinaDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionFactory.closeConnection(con, stmt, rs);
+        }
+
+        return disciplinas;
+
+    }
     
     public void update(Disciplina dis) {
 

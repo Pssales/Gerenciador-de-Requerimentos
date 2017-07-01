@@ -44,9 +44,23 @@ public class TelaDisciplina extends javax.swing.JFrame {
                 d.getDescricao()
                 
             });
-
         }
+    }
+    public void readJTableName(String name) {
 
+        DefaultTableModel modelo = (DefaultTableModel) jTDisciplina.getModel();
+        modelo.setNumRows(0);
+        DisciplinaDao dao = new DisciplinaDao();
+
+        for (Disciplina d : dao.readName(name)) {
+
+            modelo.addRow(new Object[]{
+                d.getIdDisciplina(),
+                d.getNomeDisciplina(),
+                d.getDescricao()
+                
+            });
+        }
     }
 
     /**
@@ -66,7 +80,7 @@ public class TelaDisciplina extends javax.swing.JFrame {
         jButtonCadastrar = new javax.swing.JButton();
         jButtonExcluir = new javax.swing.JButton();
         jButtonAtualizar = new javax.swing.JButton();
-        txtBuscaDesc = new javax.swing.JTextField();
+        txtBusca = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
@@ -139,7 +153,7 @@ public class TelaDisciplina extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtDescricao))
-                    .addComponent(txtBuscaDesc, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtBusca, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1)
@@ -162,7 +176,7 @@ public class TelaDisciplina extends javax.swing.JFrame {
                     .addComponent(jButtonExcluir)
                     .addComponent(jButtonAtualizar)
                     .addComponent(jButton4)
-                    .addComponent(txtBuscaDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtBusca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(37, 37, 37))
         );
 
@@ -259,7 +273,8 @@ public class TelaDisciplina extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-
+        readJTableName(txtBusca.getText());
+        
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButtonAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAtualizarActionPerformed
@@ -397,7 +412,7 @@ public class TelaDisciplina extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTDisciplina;
-    private javax.swing.JTextField txtBuscaDesc;
+    private javax.swing.JTextField txtBusca;
     private javax.swing.JTextField txtDescricao;
     private javax.swing.JTextField txtNome;
     // End of variables declaration//GEN-END:variables

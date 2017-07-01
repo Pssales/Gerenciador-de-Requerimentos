@@ -73,7 +73,7 @@
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="txtDescricao" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="txtBuscaDesc" alignment="1" min="-2" pref="401" max="-2" attributes="0"/>
+                      <Component id="txtBusca" alignment="1" min="-2" pref="401" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -101,7 +101,7 @@
                       <Component id="jButtonExcluir" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jButtonAtualizar" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jButton4" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtBuscaDesc" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtBusca" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
               </Group>
@@ -147,7 +147,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonAtualizarActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtBuscaDesc">
+        <Component class="javax.swing.JTextField" name="txtBusca">
         </Component>
         <Component class="javax.swing.JButton" name="jButton4">
           <Properties>
