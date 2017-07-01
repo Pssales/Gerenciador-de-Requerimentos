@@ -296,10 +296,10 @@ public class TelaAlunoDisciplina extends javax.swing.JFrame {
 
     private void jButtonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExcluirActionPerformed
         if (jTAlunoDisciplina.getSelectedRow() != -1) {
-            AlunoDisciplina ad = new AlunoDisciplina();
-            AlunoDisciplinaDao dao = new AlunoDisciplinaDao();
-            ad.getAluno().setIdAluno((int) jTAlunoDisciplina.getValueAt(jTAlunoDisciplina.getSelectedRow(), 0));
-            dao.delete(ad);
+            Disciplina d = new Disciplina();
+            DisciplinaDao dao = new DisciplinaDao();
+            d.setIdDisciplina((int) jTAlunoDisciplina.getValueAt(jTAlunoDisciplina.getSelectedRow(), 0));
+            dao.delete(d);
 
             readJTable();
         } else {

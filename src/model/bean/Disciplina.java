@@ -14,6 +14,7 @@ public class Disciplina {
     private int idDisciplina;
     private String nomeDisciplina;
     private String descricao;
+    private Professor professor;
 
     public int getIdDisciplina() {
         return idDisciplina;
@@ -38,6 +39,16 @@ public class Disciplina {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
+
+    public Professor getProfessor() {
+        return professor;
+    }
+
+    public void setProfessor(Professor professor) {
+        this.professor = professor;
+    }
+    
+    
     
     @Override
     public String toString(){
