@@ -16,18 +16,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import model.bean.Disciplina;
+import model.bean.Professor;
 
 /**
  *
  * @author Camila
  */
 public class DisciplinaDao {
+
     Connection con;
-    
+
     public DisciplinaDao() {
         con = ConnectionFactory.getConnection();
     }
-    public void create(Disciplina dis){
+
+    public void create(Disciplina dis) {
         PreparedStatement stmt = null;
 
         try {
@@ -36,7 +39,7 @@ public class DisciplinaDao {
             stmt.setString(1, dis.getNomeDisciplina());
             stmt.setString(2, dis.getDescricao());
             stmt.setInt(3, dis.getProfessor().getIdProfessor());
-           
+
             //executa o comando
             stmt.executeUpdate();
 
@@ -47,7 +50,7 @@ public class DisciplinaDao {
             ConnectionFactory.closeConnection(con, stmt);
         }
     }
-    
+
     public List<Disciplina> read() {
 
         PreparedStatement stmt = null;
@@ -56,7 +59,7 @@ public class DisciplinaDao {
         List<Disciplina> disciplinas = new ArrayList<>();
 
         try {
-            stmt = con.prepareStatement("SELECT idDisciplina,nomeDisciplina,descricao,nomeProfessor FROM disciplina NATURAL JOIN professor");
+            stmt = con.prepareStatement("SELECT idDisciplina,nomeDisciplina,descricao,idProfessor,nomeProfessor FROM disciplina NATURAL JOIN professor");
             rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -66,7 +69,12 @@ public class DisciplinaDao {
                 dis.setIdDisciplina(rs.getInt("idDisciplina"));
                 dis.setNomeDisciplina(rs.getString("nomeDisciplina"));
                 dis.setDescricao(rs.getString("descricao"));
-                dis.getProfessor().setNome(rs.getString("nomeProfessor"));
+
+                Professor professor = new Professor();
+                professor.setIdProfessor(rs.getInt("idProfessor"));
+                professor.setNome(rs.getString("nomeProfessor"));
+
+                dis.setProfessor(professor);
                 disciplinas.add(dis);
             }
 
@@ -80,6 +88,7 @@ public class DisciplinaDao {
         return disciplinas;
 
     }
+
     public List<Disciplina> readName(String name) {
 
         PreparedStatement stmt = null;
@@ -88,8 +97,8 @@ public class DisciplinaDao {
         List<Disciplina> disciplinas = new ArrayList<>();
 
         try {
-            stmt = con.prepareStatement("SELECT * FROM disciplina WHERE nomeDisciplina LIKE ?");
-            stmt.setString(1, "%"+name+"%");
+            stmt = con.prepareStatement("SELECT idDisciplina,nomeDisciplina,descricao,nomeProfessor FROM disciplina NATURAL JOIN professor WHERE nomeDisciplina LIKE ?");
+            stmt.setString(1, "%" + name + "%");
             rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -99,6 +108,11 @@ public class DisciplinaDao {
                 dis.setIdDisciplina(rs.getInt("idDisciplina"));
                 dis.setNomeDisciplina(rs.getString("nomeDisciplina"));
                 dis.setDescricao(rs.getString("descricao"));
+                Professor professor = new Professor();
+                professor.setIdProfessor(rs.getInt("idProfessor"));
+                professor.setNome(rs.getString("nomeProfessor"));
+                dis.setProfessor(professor);
+
                 disciplinas.add(dis);
             }
 
@@ -112,18 +126,18 @@ public class DisciplinaDao {
         return disciplinas;
 
     }
-    
+
     public void update(Disciplina dis) {
 
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("UPDATE disciplina SET nomeDisciplina = ?, descricao = ? WHERE idDisciplina = ?");
+            stmt = con.prepareStatement("UPDATE disciplina SET nomeDisciplina = ?, descricao = ?, idProfessor = ? WHERE idDisciplina = ?");
 
             stmt.setString(1, dis.getNomeDisciplina());
             stmt.setString(2, dis.getDescricao());
-            stmt.setInt(3, dis.getIdDisciplina());
-            
+            stmt.setInt(3, dis.getProfessor().getIdProfessor());
+            stmt.setInt(4, dis.getIdDisciplina());
             stmt.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
@@ -134,20 +148,23 @@ public class DisciplinaDao {
             ConnectionFactory.closeConnection(con, stmt);
         }
     }
-    
+
     public void delete(Disciplina dis) {
 
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("DELETE FROM disciplina  WHERE idDisciplina=?");
-           
+            
+            stmt = con.prepareStatement("DELETE FROM aluno_disciplina WHERE idDisciplina=?");
             stmt.setInt(1, dis.getIdDisciplina());
-            
+
             stmt.executeUpdate();
-            
-            stmt = con.prepareStatement("DELETE FROM Aluno WHERE idDisciplina=?");
-            
+                        
+            stmt = con.prepareStatement("DELETE FROM disciplina  WHERE idDisciplina=?");
+            stmt.setInt(1, dis.getIdDisciplina());
+
+            stmt.executeUpdate();
+
             JOptionPane.showMessageDialog(null, "Excluido com sucesso!");
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Não excluido!");

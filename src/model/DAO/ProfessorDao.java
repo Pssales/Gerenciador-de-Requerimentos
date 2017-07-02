@@ -26,9 +26,11 @@ import model.bean.Professor;
  */
 public class ProfessorDao {
 
+    //Cria uma nova conexão.
     Connection con;
 
     public ProfessorDao() {
+        //con recebe a conexaão feita na classe ConectionFactory
         con = ConnectionFactory.getConnection();
     }
 
@@ -159,7 +161,7 @@ public class ProfessorDao {
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("DELETE FROM pessoa  WHERE idProfessor=?");
+            stmt = con.prepareStatement("DELETE FROM professor  WHERE idProfessor=?");
             stmt.setInt(1, p.getIdProfessor());
             stmt.executeUpdate();
 

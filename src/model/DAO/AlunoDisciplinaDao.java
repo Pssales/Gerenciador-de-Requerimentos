@@ -65,12 +65,16 @@ public class AlunoDisciplinaDao {
             while (rs.next()) {
 
                 AlunoDisciplina ad = new AlunoDisciplina();
-
-                ad.getAluno().setIdAluno(rs.getInt("idAluno"));
-                ad.getAluno().setNome(rs.getString("nomeAluno"));
-                ad.getDisciplina().setIdDisciplina(rs.getInt("idDisciplina"));
-                ad.getDisciplina().setNomeDisciplina(rs.getString("nomeDisciplina"));
                 
+                Aluno a = new Aluno();
+                a.setIdAluno(rs.getInt("idAluno"));
+                a.setNome(rs.getString("nomeAluno"));
+                ad.setAluno(a);
+                
+                Disciplina d= new Disciplina();
+                d.setIdDisciplina(rs.getInt("idDisciplina"));
+                d.setNomeDisciplina(rs.getString("nomeDisciplina"));
+                ad.setDisciplina(d);
 
                 alunosDisciplinas.add(ad);
             }
@@ -91,10 +95,11 @@ public class AlunoDisciplinaDao {
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("UPDATE aluno_disciplina SET idAluno = ?, idDisciplina = ? WHERE idAluno = ?");
+            stmt = con.prepareStatement("UPDATE aluno_disciplina SET idAluno = ?, idDisciplina = ? WHERE idAluno = ? ");
 
             stmt.setInt(1, ad.getAluno().getIdAluno());
             stmt.setInt(2, ad.getDisciplina().getIdDisciplina());
+            stmt.setInt(3, ad.getAluno().getIdAluno());
 
             stmt.executeUpdate();
 
@@ -112,10 +117,12 @@ public class AlunoDisciplinaDao {
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("DELETE FROM aluno_disciplina  WHERE idAluno=?");
+            stmt = con.prepareStatement("DELETE FROM aluno_disciplina  WHERE idAluno=? AND idDisciplina=? ");
 
             stmt.setInt(1, ad.getAluno().getIdAluno());
-
+            stmt.setInt(2, ad.getDisciplina().getIdDisciplina());
+            
+            System.out.println(stmt);
             stmt.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Excluido com sucesso!");

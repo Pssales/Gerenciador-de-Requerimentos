@@ -41,7 +41,7 @@ public class TelaAlunoDisciplina extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel) jTAlunoDisciplina.getModel();
         jTAlunoDisciplina.setRowSorter(new TableRowSorter(modelo));
 
-        //   readJTable();
+        readJTable();
     }
 
     public void readJTable() {
@@ -55,7 +55,7 @@ public class TelaAlunoDisciplina extends javax.swing.JFrame {
             modelo.addRow(new Object[]{
                 ad.getAluno().getIdAluno(),
                 ad.getAluno().getNome(),
-                ad.getDisciplina().getNomeDisciplina(),
+                ad.getDisciplina().getIdDisciplina(),
                 ad.getDisciplina().getNomeDisciplina()
             });
 
@@ -264,14 +264,6 @@ public class TelaAlunoDisciplina extends javax.swing.JFrame {
     }//GEN-LAST:event_jTAlunoDisciplinaMouseClicked
 
     private void jTAlunoDisciplinaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTAlunoDisciplinaKeyReleased
-        // TODO add your handling code here:
-
-        if (jTAlunoDisciplina.getSelectedRow() != -1) {
-
-            cbAlunos.setActionCommand(jTAlunoDisciplina.getValueAt(jTAlunoDisciplina.getSelectedRow(), 1).toString());
-            cbDisciplinas.setActionCommand(jTAlunoDisciplina.getValueAt(jTAlunoDisciplina.getSelectedRow(), 2).toString());
-            
-        }
 
     }//GEN-LAST:event_jTAlunoDisciplinaKeyReleased
 
@@ -296,10 +288,11 @@ public class TelaAlunoDisciplina extends javax.swing.JFrame {
 
     private void jButtonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExcluirActionPerformed
         if (jTAlunoDisciplina.getSelectedRow() != -1) {
-            Disciplina d = new Disciplina();
-            DisciplinaDao dao = new DisciplinaDao();
-            d.setIdDisciplina((int) jTAlunoDisciplina.getValueAt(jTAlunoDisciplina.getSelectedRow(), 0));
-            dao.delete(d);
+            AlunoDisciplina ad = new AlunoDisciplina();
+            AlunoDisciplinaDao dao = new AlunoDisciplinaDao();
+            ad.setDisciplina((Disciplina) cbDisciplinas.getSelectedItem());
+            ad.setAluno((Aluno) cbAlunos.getSelectedItem());
+            dao.delete(ad);
 
             readJTable();
         } else {

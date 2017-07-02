@@ -7,10 +7,7 @@ package view;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
-
 import model.DAO.ProfessorDao;
-
 import model.bean.Professor;
 
 /**
@@ -24,19 +21,18 @@ public class TelaProfessor extends javax.swing.JFrame {
      */
     public TelaProfessor() {
         initComponents();
-        DefaultTableModel modelo = (DefaultTableModel) jTAlunos.getModel();
-        jTAlunos.setRowSorter(new TableRowSorter(modelo));
-
+        
         readJTable();
 
     }
-
+    //Popula a tabela com os dados do banco.
     public void readJTable() {
-
+        //Cria uma tabala default.
         DefaultTableModel modelo = (DefaultTableModel) jTAlunos.getModel();
         modelo.setNumRows(0);
         ProfessorDao pdao = new ProfessorDao();
 
+        //Popula a tabela com cada registro de professor existente no banco.
         for (Professor p : pdao.read()) {
 
             modelo.addRow(new Object[]{
@@ -51,12 +47,14 @@ public class TelaProfessor extends javax.swing.JFrame {
         }
 
     }
+    
+    //Popula a tabela com dados da pesquisa.
     public void readJTableName(String name) {
 
         DefaultTableModel modelo = (DefaultTableModel) jTAlunos.getModel();
         modelo.setNumRows(0);
         ProfessorDao pdao = new ProfessorDao();
-
+        
         for (Professor p : pdao.readName(name)) {
 
             modelo.addRow(new Object[]{
@@ -296,7 +294,7 @@ public class TelaProfessor extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadastrarActionPerformed
-        // TODO add your handling code here:
+        // Cria um novo professor e chama o metodo create.
         Professor p = new Professor();
         ProfessorDao dao = new ProfessorDao();
         p.setNome(txtNome.getText());
@@ -305,7 +303,8 @@ public class TelaProfessor extends javax.swing.JFrame {
         p.setRg(txtRg.getText());
         p.setEmail(txtEmail.getText());
         dao.create(p);
-   
+        
+        //Limpa a tabela.
         txtNome.setText("");
         txtDataNasc.setText("");
         txtTelefone.setText("");
@@ -316,17 +315,22 @@ public class TelaProfessor extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonCadastrarActionPerformed
 
     private void jButtonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExcluirActionPerformed
+        //Verifica se foi selecionada uma linha da tabela.
         if (jTAlunos.getSelectedRow() != -1) {
+            //Cria um novo professor com o idProfessor do professor selecionado.
             Professor p = new Professor();
             ProfessorDao dao = new ProfessorDao();
             p.setIdProfessor((int) jTAlunos.getValueAt(jTAlunos.getSelectedRow(), 0));
+            //chama o método delete, passando o professor como parametro.
             dao.delete(p);
             
+            //limpa a tabela.
             txtNome.setText("");
             txtDataNasc.setText("");
             txtTelefone.setText("");
             txtRg.setText("");
             txtEmail.setText("");
+            //Atualiza a tabela.
             readJTable();
         } else {
             JOptionPane.showMessageDialog(null, "Erro.");
@@ -335,10 +339,10 @@ public class TelaProfessor extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonExcluirActionPerformed
 
     private void jTAlunosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTAlunosMouseClicked
-        // TODO add your handling code here:
+        //Verifica se alguma linha da tabela foi selecionada.
 
         if (jTAlunos.getSelectedRow() != -1) {
-            
+            //Popula os campos do formulario com os dados da linha selecionada.
             txtNome.setText(jTAlunos.getValueAt(jTAlunos.getSelectedRow(), 1).toString());
             txtDataNasc.setText(jTAlunos.getValueAt(jTAlunos.getSelectedRow(), 2).toString());
             txtTelefone.setText(jTAlunos.getValueAt(jTAlunos.getSelectedRow(), 3).toString());
@@ -350,22 +354,13 @@ public class TelaProfessor extends javax.swing.JFrame {
     }//GEN-LAST:event_jTAlunosMouseClicked
 
     private void jTAlunosKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTAlunosKeyReleased
-        // TODO add your handling code here:
-
-        if (jTAlunos.getSelectedRow() != -1) {
-
-            txtNome.setText(jTAlunos.getValueAt(jTAlunos.getSelectedRow(), 1).toString());
-            txtDataNasc.setText(jTAlunos.getValueAt(jTAlunos.getSelectedRow(), 2).toString());
-            txtTelefone.setText(jTAlunos.getValueAt(jTAlunos.getSelectedRow(), 3).toString());
-            txtRg.setText(jTAlunos.getValueAt(jTAlunos.getSelectedRow(), 4).toString());
-            txtEmail.setText(jTAlunos.getValueAt(jTAlunos.getSelectedRow(), 5).toString());
-        }
 
     }//GEN-LAST:event_jTAlunosKeyReleased
 
     private void jButtonAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAtualizarActionPerformed
-        // TODO add your handling code here:
+        //Verifica se uma coluna foi selecionada
         if (jTAlunos.getSelectedRow() != -1) {
+            //Cria um Professor e um ProfessorDao 
             Professor p = new Professor();
             ProfessorDao dao = new ProfessorDao();
 
@@ -375,27 +370,33 @@ public class TelaProfessor extends javax.swing.JFrame {
             p.setRg(txtRg.getText());
             p.setEmail(txtEmail.getText());
             p.setIdProfessor((int) jTAlunos.getValueAt(jTAlunos.getSelectedRow(), 0));
+            //O Obejeto professor criado recebe os dados da que foram preencchidos para atualização.
+            //Chama o método update.
             dao.update(p);
             
+            //Limpa a tabela
             txtNome.setText("");
             txtDataNasc.setText("");
             txtTelefone.setText("");
             txtRg.setText("");
             txtEmail.setText("");
+            //Atualiza a tabela.
             readJTable();
         }
 
     }//GEN-LAST:event_jButtonAtualizarActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        //Chama a busca pelo nome passado  no txtBusca
         readJTableName(txtBusca.getText());
 
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        //Abre o menu.
         Menu m = new Menu();
         m.setVisible(true);
+        //Fecha a tela atual
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 

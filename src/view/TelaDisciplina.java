@@ -23,15 +23,15 @@ public class TelaDisciplina extends javax.swing.JFrame {
      * Creates new form ViewJTable
      */
     public TelaDisciplina() {
-        
+
         initComponents();
-        
+
         ProfessorDao pdao = new ProfessorDao();
-        
+
         for (Professor p : pdao.read()) {
             cbProfessores.addItem(p);
         }
-        
+
         DefaultTableModel modelo = (DefaultTableModel) jTDisciplina.getModel();
         jTDisciplina.setRowSorter(new TableRowSorter(modelo));
 
@@ -50,11 +50,14 @@ public class TelaDisciplina extends javax.swing.JFrame {
             modelo.addRow(new Object[]{
                 d.getIdDisciplina(),
                 d.getNomeDisciplina(),
-                d.getDescricao()
-                
+                d.getDescricao(),
+                d.getProfessor().getIdProfessor(),
+                d.getProfessor().getNome()
+
             });
         }
     }
+
     public void readJTableName(String name) {
 
         DefaultTableModel modelo = (DefaultTableModel) jTDisciplina.getModel();
@@ -66,8 +69,9 @@ public class TelaDisciplina extends javax.swing.JFrame {
             modelo.addRow(new Object[]{
                 d.getIdDisciplina(),
                 d.getNomeDisciplina(),
-                d.getDescricao()
-                
+                d.getDescricao(),
+                d.getProfessor().getIdProfessor(),
+                d.getProfessor().getNome()
             });
         }
     }
@@ -209,11 +213,11 @@ public class TelaDisciplina extends javax.swing.JFrame {
 
             },
             new String [] {
-                "idDisciplina", "Nome Disciplina", "Descrição", "Nome Professor"
+                "idDisciplina", "Nome Disciplina", "Descrição", "idProfessor", "Nome Professor"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -274,31 +278,22 @@ public class TelaDisciplina extends javax.swing.JFrame {
         // preenche os campos com registos do banco de dados
 
         if (jTDisciplina.getSelectedRow() != -1) {
-            
+
             txtNome.setText(jTDisciplina.getValueAt(jTDisciplina.getSelectedRow(), 1).toString());
             txtDescricao.setText(jTDisciplina.getValueAt(jTDisciplina.getSelectedRow(), 2).toString());
-            
 
         }
 
     }//GEN-LAST:event_jTDisciplinaMouseClicked
 
     private void jTDisciplinaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTDisciplinaKeyReleased
-        // TODO add your handling code here:
-
-        if (jTDisciplina.getSelectedRow() != -1) {
-
-            txtNome.setText(jTDisciplina.getValueAt(jTDisciplina.getSelectedRow(), 1).toString());
-            txtDescricao.setText(jTDisciplina.getValueAt(jTDisciplina.getSelectedRow(), 2).toString());
-            
-        }
-
+ 
     }//GEN-LAST:event_jTDisciplinaKeyReleased
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         readJTableName(txtBusca.getText());
-        
+
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButtonAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAtualizarActionPerformed
@@ -306,16 +301,17 @@ public class TelaDisciplina extends javax.swing.JFrame {
         if (jTDisciplina.getSelectedRow() != -1) {
             Disciplina d = new Disciplina();
             DisciplinaDao dao = new DisciplinaDao();
-
+            
             d.setNomeDisciplina(txtNome.getText());
             d.setDescricao(txtDescricao.getText());
+            d.setProfessor((Professor) cbProfessores.getSelectedItem());
             
             d.setIdDisciplina((int) jTDisciplina.getValueAt(jTDisciplina.getSelectedRow(), 0));
             dao.update(d);
 
             txtNome.setText("");
             txtDescricao.setText("");
-            
+
             readJTable();
         }
     }//GEN-LAST:event_jButtonAtualizarActionPerformed
@@ -329,9 +325,9 @@ public class TelaDisciplina extends javax.swing.JFrame {
 
             txtNome.setText("");
             txtDescricao.setText("");
-            
+
             readJTable();
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Erro.");
         }
     }//GEN-LAST:event_jButtonExcluirActionPerformed
@@ -344,12 +340,12 @@ public class TelaDisciplina extends javax.swing.JFrame {
         dis.setNomeDisciplina(txtNome.getText());
         dis.setDescricao(txtDescricao.getText());
         dis.setProfessor((Professor) cbProfessores.getSelectedItem());
-        
+
         dao.create(dis);
 
         txtNome.setText("");
         txtDescricao.setText("");
-        
+
         readJTable();
     }//GEN-LAST:event_jButtonCadastrarActionPerformed
 
