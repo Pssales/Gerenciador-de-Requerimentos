@@ -19,11 +19,12 @@ import java.util.logging.Logger;
  */
 public class ConnectionFactory {
 
-    private static final String DRIVER = "com.mysql.jdbc.Driver";
-    private static final String URL = "jdbc:mysql://localhost:3306/projetodb";
-    private static final String USER = "root";
-    private static final String PASS = "";
+    private static final String DRIVER = "com.mysql.jdbc.Driver";//
+    private static final String URL = "jdbc:mysql://localhost:3306/projetodb";//Caminho do banco de dados
+    private static final String USER = "root"; //Usuário do banco de dados
+    private static final String PASS = "";//Senha do usuário do banco
 
+    //Retorna a conexão com o banco de dados aberta
     public static Connection getConnection() {
         try {
             Class.forName(DRIVER);
@@ -33,6 +34,7 @@ public class ConnectionFactory {
         }
     }
 
+    //Fecha a conexão
     public static void closeConnection(Connection con) {
         try {
             if (con != null) {
@@ -42,32 +44,29 @@ public class ConnectionFactory {
             Logger.getLogger(ConnectionFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    //Fecha a conexão e preparedStatement
     public static void closeConnection(Connection con, PreparedStatement stmt) {
 
         closeConnection(con);
-
         try {
-
             if (stmt != null) {
                 stmt.close();
             }
-
         } catch (SQLException ex) {
             Logger.getLogger(ConnectionFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+    //Fecha a conexão, preparedStatement e o resultSet
     public static void closeConnection(Connection con, PreparedStatement stmt, ResultSet rs) {
 
         closeConnection(con, stmt);
-
         try {
 
             if (rs != null) {
                 rs.close();
             }
-
         } catch (SQLException ex) {
             Logger.getLogger(ConnectionFactory.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -26,20 +26,24 @@ import model.bean.Professor;
  */
 public class ProfessorDao {
 
-    //Cria uma nova conexão.
+    //Cria variavel da classe Connection
     Connection con;
 
     public ProfessorDao() {
-        //con recebe a conexaão feita na classe ConectionFactory
+        //Instancia a conexão
         con = ConnectionFactory.getConnection();
     }
 
+    //Método responsável por inserir um aluno no banco
     public void create(Professor a) {
 
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("INSERT INTO professor (nomeProfessor, dataNascimento, telefone, rg, email)VALUES(?,?,?,?,?)");
+            //Query responsável pela inserção do registro.
+            stmt = con.prepareStatement("INSERT INTO professor "
+                    + "(nomeProfessor, dataNascimento, telefone, rg, email)VALUES(?,?,?,?,?)");
+            //Prenche a query
             stmt.setString(1, a.getNome());
             try {
                 stmt.setDate(2, formataData(a.getDataNascimento()));
@@ -49,7 +53,8 @@ public class ProfessorDao {
             stmt.setString(3, a.getTelefone());
             stmt.setString(4, a.getRg());
             stmt.setString(5, a.getEmail());
-            System.out.println(stmt);
+            
+            //Executa a query
             stmt.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
@@ -60,26 +65,36 @@ public class ProfessorDao {
         }
     }
 
+    //Método responsável por buscar registros na tabela
     public List<Professor> read() {
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
+        //Lista para armazenar os registros
         List<Professor> prof = new ArrayList<>();
 
         try {
+            //Query responsavel pela busca
             stmt = con.prepareStatement("SELECT * FROM professor;");
+            
+            //Executa a query
             rs = stmt.executeQuery();
 
+            //Executa uma sequencia de comandos enquanto a condição é atendida
             while (rs.next()) {
                 
                 Professor professor = new Professor();
+                
+                //Popula o objeto
                 professor.setIdProfessor(rs.getInt("idProfessor"));
                 professor.setNome(rs.getString("nomeProfessor"));
                 professor.setDataNascimento(rs.getString("dataNascimento"));
                 professor.setTelefone(rs.getString("telefone"));
                 professor.setRg(rs.getString("rg"));
                 professor.setEmail(rs.getString("Email"));
+                
+                //Adiciona o objeto na lista
                 prof.add(professor);
             }
 
@@ -94,26 +109,39 @@ public class ProfessorDao {
 
     }
 
+    //Método responsável por buscar registros na tabela que atendem a condição
     public List<Professor> readName(String name) {
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
+        //Lista reponsável por armazenar os registros
         List<Professor> prof = new ArrayList<>();
 
         try {
+            
+            //Query responsavel por selecionar os registros que atendem a condição
             stmt = con.prepareStatement("SELECT * FROM professor WHERE nomeProfessor LIKE ?;");
+            
+            //Popula a query
             stmt.setString(1, "%" + name + "%");
+            
+            //Executa a query
             rs = stmt.executeQuery();
 
+            //Executa uma sequenciade comandos enquanto a condição for verdadeira
             while (rs.next()) {
 
                 Professor professor = new Professor();
+                
+                //Instância o objeto com os dados da pesquisa
                 professor.setNome(rs.getString("nomeProfessor"));
                 professor.setDataNascimento(rs.getString("dataNascimento"));
                 professor.setTelefone(rs.getString("telefone"));
                 professor.setRg(rs.getString("rg"));
                 professor.setEmail(rs.getString("Email"));
+                
+                //Adiciona o registro na lista
                 prof.add(professor);
             }
 
@@ -128,13 +156,17 @@ public class ProfessorDao {
 
     }
 
+    //Método responsável por atualizar um registro
     public void update(Professor p) {
 
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("UPDATE professor SET nomeProfessor = ?, dataNascimento = ?, telefone =?, rg= ?, email= ? WHERE idProfessor=?");
-
+            //Query responsável por atualizar um registro no banco
+            stmt = con.prepareStatement("UPDATE professor "
+                    + "SET nomeProfessor = ?, dataNascimento = ?, telefone =?, rg= ?, email= ? WHERE idProfessor=?");
+            
+            //preenche a query
             stmt.setString(1, p.getNome());
             try {
                 stmt.setDate(2, formataData(p.getDataNascimento()));
@@ -145,6 +177,8 @@ public class ProfessorDao {
             stmt.setString(4, p.getRg());
             stmt.setString(5, p.getEmail());
             stmt.setInt(6, p.getIdProfessor());
+            
+            //Executa a query
             stmt.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
@@ -156,13 +190,19 @@ public class ProfessorDao {
         }
     }
 
+    //Método responsável por deletar um registro
     public void delete(Professor p) {
 
         PreparedStatement stmt = null;
 
         try {
+            //Query responsavel por deletar um registro
             stmt = con.prepareStatement("DELETE FROM professor  WHERE idProfessor=?");
+            
+            //Preenche a query
             stmt.setInt(1, p.getIdProfessor());
+            
+            //Executa a query
             stmt.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Excluido com sucesso!");
@@ -174,6 +214,7 @@ public class ProfessorDao {
         }
     }
 
+    //Converte uma String em Date
     public static java.sql.Date formataData(String data) throws Exception {
         if (data == null || data.equals("")) {
             return null;

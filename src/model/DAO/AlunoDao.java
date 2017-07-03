@@ -26,20 +26,27 @@ import model.bean.Aluno;
  */
 public class AlunoDao {
 
+    //Cria variavel da classe Connection
     Connection con;
 
+    //Instancia a conexão
     public AlunoDao() {
         con = ConnectionFactory.getConnection();
     }
 
+    //Método responsável por gravar no banco de dados o objeto aluno passado por parameto. 
     public void create(Aluno a) {
 
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("INSERT INTO Aluno (nomeAluno, dataNascimento, telefone, rg,ra, email)VALUES(?,?,?,?,?,?)");
+            //Query sql responsável pela inserção no banco.
+            stmt = con.prepareStatement("INSERT INTO Aluno "
+                    + "(nomeAluno, dataNascimento, telefone, rg,ra, email)VALUES(?,?,?,?,?,?)");
 
+            //Preenche a query com os valores do aluno.
             stmt.setString(1, a.getNome());
+            //Transforma variavel do tipo String em Date.
             try {
                 stmt.setDate(2, formataData(a.getDataNascimento()));
             } catch (Exception ex) {
@@ -49,33 +56,39 @@ public class AlunoDao {
             stmt.setString(4, a.getRg());
             stmt.setString(5, a.getRa());
             stmt.setString(6, a.getEmail());
-            
+
+            //Executa a query.
             stmt.executeUpdate();
-                        
 
             JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
         } catch (SQLException ex) {
-            System.out.println(ex + "merda");
+            System.out.println(ex + "Erro");
         } finally {
             ConnectionFactory.closeConnection(con, stmt);
         }
     }
 
+    //Método responsável por ler os registros gravados no banco.
     public List<Aluno> read() {
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
+        //Lista responsável por armazenar os alunos 
         List<Aluno> alunos = new ArrayList<>();
 
         try {
+            //Query sql responsável pela seleção dos dados do banco.
             stmt = con.prepareStatement("SELECT * FROM aluno");
-            rs = stmt.executeQuery();
 
+            //Executa a query
+            rs = stmt.executeQuery();//Recebe os resultados.
+
+            //executa a sequência de comandos enquento a condição for verdadeira.
             while (rs.next()) {
 
                 Aluno aluno = new Aluno();
-
+                //Instancia o objeto aluno com os dados contidos na variavel rs
                 aluno.setIdAluno(rs.getInt("idAluno"));
                 aluno.setNome(rs.getString("nomeAluno"));
                 aluno.setDataNascimento(rs.getString("dataNascimento"));
@@ -83,6 +96,8 @@ public class AlunoDao {
                 aluno.setRg(rs.getString("rg"));
                 aluno.setRa(rs.getString("ra"));
                 aluno.setEmail(rs.getString("Email"));
+
+                //Adiciona os registros na lista
                 alunos.add(aluno);
             }
 
@@ -96,22 +111,32 @@ public class AlunoDao {
         return alunos;
 
     }
+
+    //Método responsável por ler os registros gravados no banco que atendem a condição.
     public List<Aluno> readName(String name) {
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
+        //Lista resonsável por armazenar os resultados da pesquisa
         List<Aluno> alunos = new ArrayList<>();
 
         try {
+            //Query responsável por seleciona os registos que atendem a condição.
             stmt = con.prepareStatement("SELECT * FROM aluno WHERE nomeAluno LIKE ?");
-            stmt.setString(1, "%"+name+"%");
-            rs = stmt.executeQuery();
 
+            //Passa a  condição para a query.
+            stmt.setString(1, "%" + name + "%");
+
+            //Executa a query.
+            rs = stmt.executeQuery();//Recebe os resultados
+
+            //executa a sequência de comandos enquento a condição for verdadeira.
             while (rs.next()) {
 
                 Aluno aluno = new Aluno();
 
+                //Instancia o objeto aluno com os dados contidos na variavel rs.
                 aluno.setIdAluno(rs.getInt("idAluno"));
                 aluno.setNome(rs.getString("nomeAluno"));
                 aluno.setDataNascimento(rs.getString("dataNascimento"));
@@ -119,6 +144,8 @@ public class AlunoDao {
                 aluno.setRg(rs.getString("rg"));
                 aluno.setRa(rs.getString("ra"));
                 aluno.setEmail(rs.getString("Email"));
+
+                //Adiciona os registros na lista
                 alunos.add(aluno);
             }
 
@@ -133,13 +160,16 @@ public class AlunoDao {
 
     }
 
+    //Método responsável por atualizar um registro no banco
     public void update(Aluno a) {
 
         PreparedStatement stmt = null;
 
         try {
+            //Query responsável por fazer a atualização.
             stmt = con.prepareStatement("UPDATE aluno SET nomeAluno = ?, dataNascimento = ?, telefone =?, rg = ?,ra =?, email = ? WHERE idAluno = ?");
 
+            //Preenche a query
             stmt.setString(1, a.getNome());
             try {
                 stmt.setDate(2, formataData(a.getDataNascimento()));
@@ -152,6 +182,7 @@ public class AlunoDao {
             stmt.setString(6, a.getEmail());
             stmt.setInt(7, a.getIdAluno());
 
+            //Executa a query
             stmt.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
@@ -163,21 +194,26 @@ public class AlunoDao {
         }
     }
 
+    //Método responsável por deletar um registo do banco de dados
     public void delete(Aluno a) {
 
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("DELETE FROM aluno  WHERE idAluno=?");
-           
+            //Query responsável por fazer a remoção d rejistro na tabela aluno_disciplina.
+            stmt = con.prepareStatement("DELETE FROM aluno_disciplina  WHERE idAluno=?");
+            //Preenche a query.
             stmt.setInt(1, a.getIdAluno());
-            
+            //executa a querry.
             stmt.executeUpdate();
-            
+
+            //Query responsável por fazer a remoção d rejistro na tabela aluno.
             stmt = con.prepareStatement("DELETE FROM Aluno WHERE idAluno =?");
-            
+
+            //Preenche a query.
             stmt.setInt(1, a.getIdAluno());
-            
+
+            //executa a querry.
             stmt.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Excluido com sucesso!");
@@ -188,8 +224,8 @@ public class AlunoDao {
             ConnectionFactory.closeConnection(con, stmt);
         }
     }
-    
 
+    //Converte uma variavel em formato String em Date
     public static java.sql.Date formataData(String data) throws Exception {
         if (data == null || data.equals("")) {
             return null;

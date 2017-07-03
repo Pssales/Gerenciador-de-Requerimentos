@@ -24,17 +24,22 @@ import model.bean.Professor;
  */
 public class DisciplinaDao {
 
+    //Cria uma variavel da classe Connection
     Connection con;
 
+    //Instancia a conexão
     public DisciplinaDao() {
         con = ConnectionFactory.getConnection();
     }
-
+    
+    //Método responsável por inserir um registro no banco
     public void create(Disciplina dis) {
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("INSERT INTO disciplina (nomeDisciplina, descricao,idProfessor)VALUES(?,?,?)");
+            //Query responsavel pela inserção dos registros
+            stmt = con.prepareStatement("INSERT INTO disciplina "
+                    + "(nomeDisciplina, descricao,idProfessor)VALUES(?,?,?)");
 
             stmt.setString(1, dis.getNomeDisciplina());
             stmt.setString(2, dis.getDescricao());
@@ -51,30 +56,41 @@ public class DisciplinaDao {
         }
     }
 
+    //Método responsável por ler os registros gravados no banco que atendem a condição.
     public List<Disciplina> read() {
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
+        //Lista responsável por armazenar os registros
         List<Disciplina> disciplinas = new ArrayList<>();
 
         try {
-            stmt = con.prepareStatement("SELECT idDisciplina,nomeDisciplina,descricao,idProfessor,nomeProfessor FROM disciplina NATURAL JOIN professor");
+            //Query responsavel por fazer a busca no banco.
+            stmt = con.prepareStatement("SELECT idDisciplina,nomeDisciplina,descricao,idProfessor,nomeProfessor "
+                    + "FROM disciplina NATURAL JOIN professor");
+           
+            //Executa a query
             rs = stmt.executeQuery();
 
+            //Executa uma sequencia de comando enquanto a condição for verdadeira
             while (rs.next()) {
 
                 Disciplina dis = new Disciplina();
-
+                
+                //Instancia o objeto com o resultado da busca
                 dis.setIdDisciplina(rs.getInt("idDisciplina"));
                 dis.setNomeDisciplina(rs.getString("nomeDisciplina"));
                 dis.setDescricao(rs.getString("descricao"));
 
                 Professor professor = new Professor();
+                                //Instancia o objeto com o resultado da busca
+
                 professor.setIdProfessor(rs.getInt("idProfessor"));
                 professor.setNome(rs.getString("nomeProfessor"));
-
                 dis.setProfessor(professor);
+                
+                //Insere o objeto na lista
                 disciplinas.add(dis);
             }
 
@@ -89,30 +105,43 @@ public class DisciplinaDao {
 
     }
 
+    //Método responsável por ler os registros gravados no banco.
     public List<Disciplina> readName(String name) {
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
+        //Lista responsável por armazenar as disciplinas.
         List<Disciplina> disciplinas = new ArrayList<>();
 
         try {
+            //Query responsável por seleciona os registos que atendem a condição.
             stmt = con.prepareStatement("SELECT idDisciplina,nomeDisciplina,descricao,nomeProfessor FROM disciplina NATURAL JOIN professor WHERE nomeDisciplina LIKE ?");
-            stmt.setString(1, "%" + name + "%");
-            rs = stmt.executeQuery();
 
+            //Passa a  condição para a query.
+            stmt.setString(1, "%" + name + "%");
+
+            //Executa a query
+            rs = stmt.executeQuery();//Armazena os rezultados na variavel rs
+
+            //executa a sequência de comandos enquento a condição for verdadeira.
             while (rs.next()) {
 
                 Disciplina dis = new Disciplina();
 
+                //Preenche o objeto com os dados da busca
                 dis.setIdDisciplina(rs.getInt("idDisciplina"));
                 dis.setNomeDisciplina(rs.getString("nomeDisciplina"));
                 dis.setDescricao(rs.getString("descricao"));
+
                 Professor professor = new Professor();
+
+                //Preenche o objeto com os dados da busca
                 professor.setIdProfessor(rs.getInt("idProfessor"));
                 professor.setNome(rs.getString("nomeProfessor"));
                 dis.setProfessor(professor);
 
+                //Armazena os dados na lista
                 disciplinas.add(dis);
             }
 
@@ -127,17 +156,23 @@ public class DisciplinaDao {
 
     }
 
+    //Métpdo responsável por atualizar um registro
     public void update(Disciplina dis) {
 
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("UPDATE disciplina SET nomeDisciplina = ?, descricao = ?, idProfessor = ? WHERE idDisciplina = ?");
+            //Query responsável por atualizar um registro
+            stmt = con.prepareStatement("UPDATE disciplina SET "
+                    + "nomeDisciplina = ?, descricao = ?, idProfessor = ? WHERE idDisciplina = ?");
 
+            //Preenche a query
             stmt.setString(1, dis.getNomeDisciplina());
             stmt.setString(2, dis.getDescricao());
             stmt.setInt(3, dis.getProfessor().getIdProfessor());
             stmt.setInt(4, dis.getIdDisciplina());
+
+            //Executa a query
             stmt.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
@@ -149,20 +184,28 @@ public class DisciplinaDao {
         }
     }
 
+    //Método responsavel por apagar um registro
     public void delete(Disciplina dis) {
 
         PreparedStatement stmt = null;
 
         try {
-            
+            //Query resposavel por apagar um registro da tabela aluno-disciplina
             stmt = con.prepareStatement("DELETE FROM aluno_disciplina WHERE idDisciplina=?");
+
+            //Preenche a query
             stmt.setInt(1, dis.getIdDisciplina());
 
+            //Executa a query
             stmt.executeUpdate();
-                        
+
+            //Query resposavel por apagar um registro da tabela disciplina
             stmt = con.prepareStatement("DELETE FROM disciplina  WHERE idDisciplina=?");
+            
+            //Preenche a query
             stmt.setInt(1, dis.getIdDisciplina());
 
+            //Executa a query
             stmt.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Excluido com sucesso!");
