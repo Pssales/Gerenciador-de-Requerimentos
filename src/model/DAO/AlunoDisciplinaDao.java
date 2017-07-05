@@ -104,32 +104,6 @@ public class AlunoDisciplinaDao {
 
     }
 
-    //Método responsável por ler os registros gravados no banco que atendem a condição.
-    public void update(AlunoDisciplina ad) {
-
-        PreparedStatement stmt = null;
-
-        try {
-            //Query responsável por atualizar o registro
-            stmt = con.prepareStatement("UPDATE aluno_disciplina SET "
-                    + "idAluno = ?, idDisciplina = ? WHERE idAluno = ? ");
-
-            //Preenche os dados da query.
-            stmt.setInt(1, ad.getAluno().getIdAluno());
-            stmt.setInt(2, ad.getDisciplina().getIdDisciplina());
-            stmt.setInt(3, ad.getAluno().getIdAluno());
-
-            //Executa a query
-            stmt.executeUpdate();
-
-            JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Não Atualizado!");
-            System.out.println(ex);
-        } finally {
-            ConnectionFactory.closeConnection(con, stmt);
-        }
-    }
 
     //Método resposável por apagar um registro do banco
     public void delete(AlunoDisciplina ad) {

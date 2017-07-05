@@ -113,7 +113,9 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void EntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntrarActionPerformed
+      //Valida o login
         if (logUsuario.getText().equals("admin") && txtSenha.getText().equals("1234")) {
+            //Se a condição de login for aceita abre o menu
             Menu m = new Menu();
             m.setVisible(true);
             dispose();

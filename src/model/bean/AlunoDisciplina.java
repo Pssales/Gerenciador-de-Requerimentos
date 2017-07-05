@@ -29,9 +29,6 @@ public class AlunoDisciplina {
         this.disciplina = disciplina;
     }
 
-    public void getDisciplina(Object object) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
     
     

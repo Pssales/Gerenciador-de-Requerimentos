@@ -48,8 +48,6 @@ public class Disciplina {
         this.professor = professor;
     }
     
-    
-    
     @Override
     public String toString(){
         return getNomeDisciplina();

@@ -197,6 +197,15 @@ public class ProfessorDao {
 
         try {
             //Query responsavel por deletar um registro
+            stmt = con.prepareStatement("DELETE FROM disciplina  WHERE idProfessor=?");
+            
+            //Preenche a query
+            stmt.setInt(1, p.getIdProfessor());
+            
+            //Executa a query
+            stmt.executeUpdate();
+            
+            //Query responsavel por deletar um registro
             stmt = con.prepareStatement("DELETE FROM professor  WHERE idProfessor=?");
             
             //Preenche a query

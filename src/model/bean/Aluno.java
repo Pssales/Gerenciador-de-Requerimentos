@@ -30,8 +30,6 @@ public class Aluno extends Pessoa {
         this.disciplina = disciplina;
     }
 
-    
-
     public String getNome() {
         return nome;
     }
